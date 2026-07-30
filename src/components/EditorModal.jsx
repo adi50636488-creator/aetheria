@@ -1,18 +1,79 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Save, ShieldAlert, Sparkles, Feather, BookOpen, Volume2, Moon, Smile, Layers, Globe, Languages } from 'lucide-react';
 
+const DRAFT_KEYS = {
+  TITLE: 'aetheria_draft_title',
+  CONTENT: 'aetheria_draft_content',
+  CATEGORY: 'aetheria_draft_category',
+  LANGUAGE: 'aetheria_draft_language',
+  TRANSLATION: 'aetheria_draft_translation',
+  TAGS: 'aetheria_draft_tags'
+};
+
 export const EditorModal = ({ post, currentUser, permission, onClose, onSave }) => {
-  // Initialize state once on mount so parent re-renders never wipe typed text!
-  const [title, setTitle] = useState(() => post ? (post.title || '') : '');
-  const [category, setCategory] = useState(() => post ? (post.category || 'small_story') : 'small_story');
+  // Load draft from storage for new posts to prevent any character loss on mobile!
+  const [title, setTitle] = useState(() => {
+    if (post) return post.title || '';
+    try { return localStorage.getItem(DRAFT_KEYS.TITLE) || ''; } catch (e) { return ''; }
+  });
+
+  const [category, setCategory] = useState(() => {
+    if (post) return post.category || 'small_story';
+    try { return localStorage.getItem(DRAFT_KEYS.CATEGORY) || 'small_story'; } catch (e) { return 'small_story'; }
+  });
+
   const [customCategory, setCustomCategory] = useState(() => post ? (post.customCategory || '') : '');
-  const [language, setLanguage] = useState(() => post ? (post.language || 'English') : 'English');
+  
+  const [language, setLanguage] = useState(() => {
+    if (post) return post.language || 'English';
+    try { return localStorage.getItem(DRAFT_KEYS.LANGUAGE) || 'English'; } catch (e) { return 'English'; }
+  });
+
   const [customLanguage, setCustomLanguage] = useState(() => post ? (post.customLanguage || '') : '');
-  const [content, setContent] = useState(() => post ? (post.content || '') : '');
-  const [englishTranslation, setEnglishTranslation] = useState(() => post ? (post.englishTranslation || '') : '');
+  
+  const [content, setContent] = useState(() => {
+    if (post) return post.content || '';
+    try { return localStorage.getItem(DRAFT_KEYS.CONTENT) || ''; } catch (e) { return ''; }
+  });
+
+  const [englishTranslation, setEnglishTranslation] = useState(() => {
+    if (post) return post.englishTranslation || '';
+    try { return localStorage.getItem(DRAFT_KEYS.TRANSLATION) || ''; } catch (e) { return ''; }
+  });
+
   const [excerpt, setExcerpt] = useState(() => post ? (post.excerpt || '') : '');
-  const [tags, setTags] = useState(() => post && post.tags ? post.tags.join(', ') : '');
+  
+  const [tags, setTags] = useState(() => {
+    if (post && post.tags) return post.tags.join(', ');
+    try { return localStorage.getItem(DRAFT_KEYS.TAGS) || ''; } catch (e) { return ''; }
+  });
+
   const [authorName, setAuthorName] = useState(() => post ? (post.authorName || '') : (currentUser?.name || ''));
+
+  // Save typing draft continuously to prevent loss on mobile app switching / refreshes
+  useEffect(() => {
+    if (!post) {
+      try {
+        localStorage.setItem(DRAFT_KEYS.TITLE, title);
+        localStorage.setItem(DRAFT_KEYS.CONTENT, content);
+        localStorage.setItem(DRAFT_KEYS.CATEGORY, category);
+        localStorage.setItem(DRAFT_KEYS.LANGUAGE, language);
+        localStorage.setItem(DRAFT_KEYS.TRANSLATION, englishTranslation);
+        localStorage.setItem(DRAFT_KEYS.TAGS, tags);
+      } catch (e) {}
+    }
+  }, [title, content, category, language, englishTranslation, tags, post]);
+
+  const clearDraft = () => {
+    try {
+      localStorage.removeItem(DRAFT_KEYS.TITLE);
+      localStorage.removeItem(DRAFT_KEYS.CONTENT);
+      localStorage.removeItem(DRAFT_KEYS.CATEGORY);
+      localStorage.removeItem(DRAFT_KEYS.LANGUAGE);
+      localStorage.removeItem(DRAFT_KEYS.TRANSLATION);
+      localStorage.removeItem(DRAFT_KEYS.TAGS);
+    } catch (e) {}
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -28,7 +89,7 @@ export const EditorModal = ({ post, currentUser, permission, onClose, onSave }) 
 
     const generatedExcerpt = excerpt.trim() || (content.length > 150 ? content.slice(0, 150) + '...' : content);
 
-    onSave({
+    const success = onSave({
       title: title.trim(),
       category,
       customCategory: category === 'others' ? customCategory.trim() : '',
@@ -40,6 +101,17 @@ export const EditorModal = ({ post, currentUser, permission, onClose, onSave }) 
       tags: tagArray,
       authorName: authorName.trim() || currentUser?.name || 'Anonymous Author'
     });
+
+    if (success !== false) {
+      clearDraft();
+    }
+  };
+
+  // Prevent mobile keyboard Enter from submitting form prematurely
+  const handleInputKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+    }
   };
 
   const isOwnerOverride = permission?.isOwnerOverride;
@@ -76,7 +148,7 @@ export const EditorModal = ({ post, currentUser, permission, onClose, onSave }) 
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           
-          {/* Title */}
+          {/* Title Input */}
           <div className="form-group">
             <label className="form-label">Title of Your Work *</label>
             <input
@@ -84,6 +156,7 @@ export const EditorModal = ({ post, currentUser, permission, onClose, onSave }) 
               placeholder="e.g. Whispers in the Rain, The Midnight Paradox, etc."
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+              onKeyDown={handleInputKeyDown}
               className="form-input"
               required
             />
@@ -134,6 +207,7 @@ export const EditorModal = ({ post, currentUser, permission, onClose, onSave }) 
                 placeholder="e.g. Micro-fiction, Haiku, Philosophical Essay, etc."
                 value={customCategory}
                 onChange={(e) => setCustomCategory(e.target.value)}
+                onKeyDown={handleInputKeyDown}
                 className="form-input"
                 required
               />
@@ -149,6 +223,7 @@ export const EditorModal = ({ post, currentUser, permission, onClose, onSave }) 
                 placeholder="e.g. Sanskrit, Bengali, Marathi, Japanese, etc."
                 value={customLanguage}
                 onChange={(e) => setCustomLanguage(e.target.value)}
+                onKeyDown={handleInputKeyDown}
                 className="form-input"
                 required
               />
@@ -192,6 +267,7 @@ export const EditorModal = ({ post, currentUser, permission, onClose, onSave }) 
               placeholder="e.g. romance, philosophy, late-night, funny, motivation"
               value={tags}
               onChange={(e) => setTags(e.target.value)}
+              onKeyDown={handleInputKeyDown}
               className="form-input"
             />
           </div>
