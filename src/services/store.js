@@ -2,15 +2,15 @@ import { INITIAL_USERS, INITIAL_POSTS, INITIAL_COMMENTS } from '../data/initialD
 import { cloudDb } from './cloudDb';
 
 const LOCAL_STORAGE_KEYS = {
-  POSTS: 'aetheria_posts_v11',
-  ACCOUNTS: 'aetheria_accounts_v11',
-  CURRENT_USER_ID: 'aetheria_current_user_id_v11',
-  THEME: 'aetheria_theme_v11',
-  BOOKMARKS: 'aetheria_bookmarks_v11',
-  COMMENTS: 'aetheria_comments_v11',
-  SOUNDSCAPE: 'aetheria_soundscape_v11',
-  OWNER_UNLOCKED: 'aetheria_owner_unlocked_v11',
-  OWNER_PASSCODE: 'aetheria_owner_passcode_v11'
+  POSTS: 'aetheria_posts_v12',
+  ACCOUNTS: 'aetheria_accounts_v12',
+  CURRENT_USER_ID: 'aetheria_current_user_id_v12',
+  THEME: 'aetheria_theme_v12',
+  BOOKMARKS: 'aetheria_bookmarks_v12',
+  COMMENTS: 'aetheria_comments_v12',
+  SOUNDSCAPE: 'aetheria_soundscape_v12',
+  OWNER_UNLOCKED: 'aetheria_owner_unlocked_v12',
+  OWNER_PASSCODE: 'aetheria_owner_passcode_v12'
 };
 
 export const CATEGORIES_LIST = [
@@ -91,7 +91,6 @@ class Store {
       if (foundUser) {
         this.currentUser = foundUser;
       } else {
-        // Default: Guest mode (not logged in)
         this.currentUser = null;
       }
     }
@@ -110,7 +109,7 @@ class Store {
     this.securityToast = null;
     this.cloudSyncStatus = 'synced';
     this.securityLogs = [
-      { id: 1, time: new Date().toLocaleTimeString(), text: 'Authentication State Machine Initialized.' }
+      { id: 1, time: new Date().toLocaleTimeString(), text: 'Input Stability Protection Engine Active.' }
     ];
 
     this.applyTheme(this.theme);
@@ -120,12 +119,18 @@ class Store {
 
     if (typeof window !== 'undefined') {
       setInterval(() => {
-        this.syncFromCloud(true);
-      }, 8000);
+        // Skip background notification if editor modal is open!
+        if (!this.isEditorOpen) {
+          this.syncFromCloud(true);
+        }
+      }, 10000);
     }
   }
 
   async syncFromCloud(silent = false) {
+    // DO NOT interrupt user while writing!
+    if (this.isEditorOpen) return;
+
     if (!silent) {
       this.cloudSyncStatus = 'syncing';
       this.notify();
@@ -144,7 +149,7 @@ class Store {
         if (hasChanges) {
           this.posts = updatedList;
           this.saveToStorage(LOCAL_STORAGE_KEYS.POSTS, this.posts);
-          if (!silent) {
+          if (!silent && !this.isEditorOpen) {
             this.showSecurityToast('success', 'Global Cloud Synced', 'Updated with latest works published across all devices worldwide!');
           }
         }
@@ -153,7 +158,10 @@ class Store {
     } catch (e) {
       this.cloudSyncStatus = 'offline';
     }
-    this.notify();
+
+    if (!this.isEditorOpen) {
+      this.notify();
+    }
   }
 
   async pushToCloud() {
@@ -230,7 +238,6 @@ class Store {
     this.accounts.push(newUser);
     this.saveToStorage(LOCAL_STORAGE_KEYS.ACCOUNTS, this.accounts);
 
-    // Set logged in state
     this.currentUser = newUser;
     this.isOwnerAuthenticated = false;
     this.saveToStorage(LOCAL_STORAGE_KEYS.CURRENT_USER_ID, newUser.id);
@@ -613,7 +620,6 @@ class Store {
       return;
     }
 
-    this.comments.filter(c => c.id !== commentId);
     this.comments = this.comments.filter(c => c.id !== commentId);
     this.saveToStorage(LOCAL_STORAGE_KEYS.COMMENTS, this.comments);
     this.showSecurityToast('info', 'Comment Deleted', 'Comment removed.');

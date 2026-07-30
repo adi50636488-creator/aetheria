@@ -1,44 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { X, Save, ShieldAlert, Sparkles, Feather, BookOpen, Volume2, Moon, Smile, Layers, Globe, Languages } from 'lucide-react';
-import { CATEGORIES_LIST, LANGUAGES_LIST } from '../services/store';
 
 export const EditorModal = ({ post, currentUser, permission, onClose, onSave }) => {
-  const [title, setTitle] = useState('');
-  const [category, setCategory] = useState('small_story');
-  const [customCategory, setCustomCategory] = useState('');
-  const [language, setLanguage] = useState('English');
-  const [customLanguage, setCustomLanguage] = useState('');
-  const [content, setContent] = useState('');
-  const [englishTranslation, setEnglishTranslation] = useState('');
-  const [excerpt, setExcerpt] = useState('');
-  const [tags, setTags] = useState('');
-  const [authorName, setAuthorName] = useState('');
-
-  useEffect(() => {
-    if (post) {
-      setTitle(post.title || '');
-      setCategory(post.category || 'small_story');
-      setCustomCategory(post.customCategory || '');
-      setLanguage(post.language || 'English');
-      setCustomLanguage(post.customLanguage || '');
-      setContent(post.content || '');
-      setEnglishTranslation(post.englishTranslation || '');
-      setExcerpt(post.excerpt || '');
-      setTags(post.tags ? post.tags.join(', ') : '');
-      setAuthorName(post.authorName || currentUser?.name || '');
-    } else {
-      setTitle('');
-      setCategory('small_story');
-      setCustomCategory('');
-      setLanguage('English');
-      setCustomLanguage('');
-      setContent('');
-      setEnglishTranslation('');
-      setExcerpt('');
-      setTags('');
-      setAuthorName(currentUser?.name || 'Anonymous Author');
-    }
-  }, [post, currentUser]);
+  // Initialize state once on mount so parent re-renders never wipe typed text!
+  const [title, setTitle] = useState(() => post ? (post.title || '') : '');
+  const [category, setCategory] = useState(() => post ? (post.category || 'small_story') : 'small_story');
+  const [customCategory, setCustomCategory] = useState(() => post ? (post.customCategory || '') : '');
+  const [language, setLanguage] = useState(() => post ? (post.language || 'English') : 'English');
+  const [customLanguage, setCustomLanguage] = useState(() => post ? (post.customLanguage || '') : '');
+  const [content, setContent] = useState(() => post ? (post.content || '') : '');
+  const [englishTranslation, setEnglishTranslation] = useState(() => post ? (post.englishTranslation || '') : '');
+  const [excerpt, setExcerpt] = useState(() => post ? (post.excerpt || '') : '');
+  const [tags, setTags] = useState(() => post && post.tags ? post.tags.join(', ') : '');
+  const [authorName, setAuthorName] = useState(() => post ? (post.authorName || '') : (currentUser?.name || ''));
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -83,7 +57,7 @@ export const EditorModal = ({ post, currentUser, permission, onClose, onSave }) 
             <span style={{ fontSize: '0.8rem', color: 'var(--text-subtle)', fontFamily: 'var(--font-sans)' }}>
               {isOwnerOverride
                 ? '👑 Owner Authority: Aaditya Kumar master editing mode.'
-                : `Publishing as: ${authorName || currentUser?.name}`}
+                : `Publishing as: ${authorName || currentUser?.name || 'Publisher'}`}
             </span>
           </div>
 
@@ -195,7 +169,7 @@ export const EditorModal = ({ post, currentUser, permission, onClose, onSave }) 
             />
           </div>
 
-          {/* English Translation Field (For Hindi or other language works) */}
+          {/* English Translation Field */}
           <div className="form-group" style={{ background: 'var(--bg-input)', padding: '16px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem', fontWeight: 700, color: 'var(--accent-primary)', marginBottom: '6px' }}>
               <Languages size={16} /> Optional English Translation (For readers who want to read in English)
@@ -208,9 +182,6 @@ export const EditorModal = ({ post, currentUser, permission, onClose, onSave }) 
               className="form-input"
               style={{ fontFamily: 'var(--font-sans)', fontSize: '0.9rem' }}
             />
-            <span style={{ fontSize: '0.72rem', color: 'var(--text-subtle)', marginTop: '4px', display: 'block', fontFamily: 'var(--font-sans)' }}>
-              If left blank, readers can click "Translate to English" to view an instant auto-generated English translation!
-            </span>
           </div>
 
           {/* Tags */}
