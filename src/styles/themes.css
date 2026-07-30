@@ -1,0 +1,194 @@
+/* Aetheria Book-Inspired & Classic Themes System */
+
+:root {
+  --font-garamond: 'EB Garamond', Georgia, serif;
+  --font-merriweather: 'Merriweather', serif;
+  --font-playfair: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-accessible: 'Atkinson Hyperlegible', sans-serif;
+  --font-heading: 'Cinzel', serif;
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* 1. Classic Book Parchment (Default) - Warm Ivory Book Paper */
+body.theme-classic-parchment {
+  --bg-primary: #f6f1e7;
+  --bg-secondary: #ebdcc9;
+  --bg-card: rgba(253, 250, 243, 0.92);
+  --bg-glass: rgba(246, 241, 231, 0.94);
+  --bg-hover: rgba(160, 73, 29, 0.08);
+  --bg-input: #eee3d2;
+  
+  --text-main: #241d1a;
+  --text-muted: #66554b;
+  --text-subtle: #8e7a6f;
+  
+  --accent-primary: #a0491d;
+  --accent-secondary: #7f3410;
+  --accent-gold: #c97a2b;
+  --accent-glow: rgba(160, 73, 29, 0.18);
+  
+  --border-color: rgba(102, 85, 75, 0.16);
+  --border-highlight: rgba(160, 73, 29, 0.35);
+  
+  --shadow-card: 0 10px 30px -5px rgba(60, 45, 35, 0.08), 0 0 1px rgba(60, 45, 35, 0.15);
+  --shadow-glow: 0 0 20px rgba(160, 73, 29, 0.2);
+}
+
+/* 2. Warm Cream Novel Paper */
+body.theme-warm-cream {
+  --bg-primary: #fbf8f1;
+  --bg-secondary: #f3ecdc;
+  --bg-card: rgba(255, 253, 248, 0.95);
+  --bg-glass: rgba(251, 248, 241, 0.95);
+  --bg-hover: rgba(201, 122, 43, 0.08);
+  --bg-input: #ebe3cf;
+  
+  --text-main: #1f1a17;
+  --text-muted: #5e5248;
+  --text-subtle: #8a7c70;
+  
+  --accent-primary: #c97a2b;
+  --accent-secondary: #a35d18;
+  --accent-gold: #d97706;
+  --accent-glow: rgba(201, 122, 43, 0.16);
+  
+  --border-color: rgba(94, 82, 72, 0.14);
+  --border-highlight: rgba(201, 122, 43, 0.35);
+  
+  --shadow-card: 0 8px 24px -4px rgba(45, 35, 25, 0.06), 0 0 1px rgba(45, 35, 25, 0.15);
+  --shadow-glow: 0 0 20px rgba(201, 122, 43, 0.18);
+}
+
+/* 3. Soft Sage Tea Paper */
+body.theme-sage-paper {
+  --bg-primary: #edf2eb;
+  --bg-secondary: #d8e2d4;
+  --bg-card: rgba(246, 250, 245, 0.92);
+  --bg-glass: rgba(237, 242, 235, 0.94);
+  --bg-hover: rgba(46, 125, 90, 0.08);
+  --bg-input: #d0dccb;
+  
+  --text-main: #1b2e25;
+  --text-muted: #4e6b5c;
+  --text-subtle: #799486;
+  
+  --accent-primary: #2e7d5a;
+  --accent-secondary: #1e593f;
+  --accent-gold: #b48528;
+  --accent-glow: rgba(46, 125, 90, 0.18);
+  
+  --border-color: rgba(78, 107, 92, 0.16);
+  --border-highlight: rgba(46, 125, 90, 0.35);
+  
+  --shadow-card: 0 10px 30px -5px rgba(27, 46, 37, 0.08), 0 0 1px rgba(27, 46, 37, 0.15);
+  --shadow-glow: 0 0 20px rgba(46, 125, 90, 0.2);
+}
+
+/* 4. Espresso Night Reader */
+body.theme-espresso-night {
+  --bg-primary: #1c1816;
+  --bg-secondary: #28221f;
+  --bg-card: rgba(44, 37, 34, 0.85);
+  --bg-glass: rgba(34, 28, 25, 0.92);
+  --bg-hover: rgba(229, 169, 60, 0.12);
+  --bg-input: #362e2a;
+  
+  --text-main: #f5ebe0;
+  --text-muted: #d5c3b1;
+  --text-subtle: #a3907e;
+  
+  --accent-primary: #e5a93c;
+  --accent-secondary: #c88926;
+  --accent-gold: #f59e0b;
+  --accent-glow: rgba(229, 169, 60, 0.25);
+  
+  --border-color: rgba(245, 235, 224, 0.12);
+  --border-highlight: rgba(229, 169, 60, 0.4);
+  
+  --shadow-card: 0 10px 30px -5px rgba(0, 0, 0, 0.5), 0 0 1px rgba(245, 235, 224, 0.1);
+  --shadow-glow: 0 0 25px rgba(229, 169, 60, 0.3);
+}
+
+/* 5. Dusty Blue Linen */
+body.theme-dusty-linen {
+  --bg-primary: #eaeff2;
+  --bg-secondary: #d4dfe6;
+  --bg-card: rgba(245, 248, 250, 0.92);
+  --bg-glass: rgba(234, 239, 242, 0.94);
+  --bg-hover: rgba(79, 70, 229, 0.08);
+  --bg-input: #cbe3f0;
+  
+  --text-main: #1e293b;
+  --text-muted: #475569;
+  --text-subtle: #64748b;
+  
+  --accent-primary: #4f46e5;
+  --accent-secondary: #3730a3;
+  --accent-gold: #d97706;
+  --accent-glow: rgba(79, 70, 229, 0.18);
+  
+  --border-color: rgba(71, 85, 105, 0.16);
+  --border-highlight: rgba(79, 70, 229, 0.35);
+  
+  --shadow-card: 0 10px 30px -5px rgba(30, 41, 59, 0.08), 0 0 1px rgba(30, 41, 59, 0.15);
+  --shadow-glow: 0 0 20px rgba(79, 70, 229, 0.2);
+}
+
+/* 6. Clean Light Theme (New) */
+body.theme-clean-light {
+  --bg-primary: #f8fafc;
+  --bg-secondary: #e2e8f0;
+  --bg-card: rgba(255, 255, 255, 0.92);
+  --bg-glass: rgba(248, 250, 252, 0.95);
+  --bg-hover: rgba(99, 102, 241, 0.08);
+  --bg-input: #edf2f7;
+  
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --text-subtle: #64748b;
+  
+  --accent-primary: #6366f1;
+  --accent-secondary: #4f46e5;
+  --accent-gold: #d97706;
+  --accent-glow: rgba(99, 102, 241, 0.18);
+  
+  --border-color: rgba(148, 163, 184, 0.2);
+  --border-highlight: rgba(99, 102, 241, 0.4);
+  
+  --shadow-card: 0 8px 24px -4px rgba(15, 23, 42, 0.08), 0 0 1px rgba(15, 23, 42, 0.15);
+  --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.2);
+}
+
+/* 7. Midnight Dark Theme (New) */
+body.theme-midnight-dark {
+  --bg-primary: #0b0f19;
+  --bg-secondary: #161e2e;
+  --bg-card: rgba(22, 30, 46, 0.85);
+  --bg-glass: rgba(15, 23, 42, 0.92);
+  --bg-hover: rgba(129, 140, 248, 0.12);
+  --bg-input: #1e293b;
+  
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-subtle: #64748b;
+  
+  --accent-primary: #818cf8;
+  --accent-secondary: #6366f1;
+  --accent-gold: #fbbf24;
+  --accent-glow: rgba(129, 140, 248, 0.25);
+  
+  --border-color: rgba(255, 255, 255, 0.1);
+  --border-highlight: rgba(129, 140, 248, 0.4);
+  
+  --shadow-card: 0 10px 30px -5px rgba(0, 0, 0, 0.7), 0 0 1px rgba(255, 255, 255, 0.1);
+  --shadow-glow: 0 0 25px rgba(129, 140, 248, 0.35);
+}
